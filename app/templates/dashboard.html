@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Study.AI</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-50 text-gray-800">
+
+  <!-- Header -->
+  <header class="bg-white shadow-md py-4 px-6 flex justify-between items-center">
+    <h1 class="text-2xl font-bold text-blue-600">Study.AI Dashboard</h1>
+    <nav>
+      <ul class="flex space-x-4 text-sm">
+        <li><span class="text-gray-700">Hello, <strong>{{ user_name }}</strong></span></li>
+        <li><a href="/logout" class="hover:text-red-600 text-red-500">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Welcome Banner -->
+  <section class="bg-blue-50 py-4 text-center">
+    <p class="text-blue-600 font-semibold">Welcome to your dashboard, {{ user_name }}!</p>
+  </section>
+
+  <!-- Upload Section -->
+  <section class="py-16 px-6 max-w-3xl mx-auto">
+    <h2 class="text-3xl font-semibold text-center mb-8">Upload or Paste Your Notes</h2>
+    <form action="/process" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow space-y-6">
+      
+      <!-- File Input -->
+      <div>
+        <label class="block font-medium mb-2">Upload a file (PDF, DOCX, or TXT)</label>
+        <input type="file" name="noteFile" class="block w-full border rounded px-3 py-2" />
+      </div>
+
+      <!-- Text Area -->
+      <div>
+        <label class="block font-medium mb-2">Or paste your notes</label>
+        <textarea name="noteText" rows="5" class="w-full border rounded px-3 py-2" placeholder="Enter your notes here..."></textarea>
+      </div>
+
+      <!-- Submit Button -->
+      <button type="submit" class="bg-blue-600 text-white px-6 py-3 rounded-xl hover:bg-blue-700 transition w-full">
+        Process Notes
+      </button>
+    </form>
+  </section>
+
+  <!-- Footer -->
+  <footer class="text-center py-6 border-t mt-12">
+    <p class="text-sm">&copy; 2025 Study.AI. Study smarter with AI-powered insights.</p>
+  </footer>
+</body>
+</html>
