@@ -6,17 +6,31 @@
     <title>Sign Up / Login - Note AI</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
+
   <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
     <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
+
       <h2 class="text-2xl font-bold text-center text-blue-600 mb-6">Welcome to Note AI</h2>
-      
+
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <div class="mb-4">
+            {% for message in messages %}
+              <div class="bg-red-600 text-white text-center px-4 py-2 rounded">
+                {{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
       <!-- Tabs for Sign Up / Login -->
       <div class="flex justify-around mb-6">
         <button id="showSignup" class="text-blue-600 font-semibold">Sign Up</button>
         <button id="showLogin" class="text-gray-500">Login</button>
       </div>
 
-      <!-- Signup Form -->
       <!-- Signup Form -->
       <form id="signupForm" class="space-y-4" action="/signup" method="POST">
         <input type="text" name="name" placeholder="Name" class="w-full p-2 border rounded-lg" required />

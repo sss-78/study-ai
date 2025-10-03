@@ -54,21 +54,22 @@ def signup():
         name = request.form.get('name')
         email = request.form.get('email')
         password = request.form.get('password')
-        
+
+        if User.query.filter_by(email=email).first():
+            flash("Email already registered. Please register with a different email.")
+            return redirect('/signup')
+
         print(name, email, password)
 
-        # if User.query.filter_by(email=email).first():
-        #     flash("Email already registered. Please log in.")
-        #     return redirect('/signup')
-
         hashed_password = generate_password_hash(password)
-        user = User(name=name, email=email, password=hashed_password)
+        user = User(name=name, email=email, password=hashed_password, limit=5, paid_user=False)
         db.session.add(user)
         db.session.commit()
         print("User created successfully") 
 
         session['user_id'] = user.id
         session['user_name'] = user.name
+        session['user_limit'] = user.limit
 
         return redirect('/dashboard')
 
@@ -83,12 +84,11 @@ def logout():
     session.clear()
     return redirect('/login') 
 
-
 @app.route('/dashboard')
 def dashboard():
     if 'user_name' not in session:
         return redirect('/signup')
-    return render_template('dashboard.html', user_name=session['user_name'])
+    return render_template('dashboard.html', user_name=session['user_name'], user_limit=session['user_limit'])
 
 @app.route('/process', methods=['POST'])
 def process_note():
@@ -96,13 +96,18 @@ def process_note():
     file = request.files.get('noteFile')
     note_received, file_received = False, False
     txt_input, file_input = note_text, ''
+    current_user_limit = session['user_limit']
+
+    if current_user_limit == 0:
+        flash("You have reached your limit. Please upgrade your plan.")
+        return redirect('/dashboard')
 
     if not file and not note_text.strip():
         flash("Please upload a file or paste some notes.")
         return redirect('/dashboard')
 
     if note_text and note_text.strip():  # User uploaded in text-field
-        note_recieved = True
+        note_received = True
         print("Received text input:", note_text)
 
         filename = f"{session['user_name']}/text_notes/{datetime.now().isoformat()}.txt"
@@ -111,8 +116,8 @@ def process_note():
 
         print(f"Uploaded Text as {filename}")
 
-    if file and file.filename:  # User uploaded a file
-        file_recieved = True
+    if file and file.filename:  # User uploaded a file (Still need to handle file type validation)
+        file_received = True
         print("Received file:", file.filename)
 
         file_bytes = file.read()
@@ -129,6 +134,9 @@ def process_note():
     if note_received or file_received:
         session['txt_input'] = txt_input
         session['file_input'] = file_input
+        session['user_limit'] = max(0, current_user_limit - 1)
+        User.query.filter_by(id=session['user_id']).update({'limit': session['user_limit']})
+        db.session.commit()
         return render_template('processing.html')
 
     return render_template('dashboard.html', user_name=session['user_name'])
@@ -157,4 +165,4 @@ def init_db():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, reloader=True)
+    app.run(debug=True)

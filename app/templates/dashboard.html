@@ -24,9 +24,23 @@
     <p class="text-blue-600 font-semibold">Welcome to your dashboard, {{ user_name }}!</p>
   </section>
 
+  <div class="flex justify-center mt-4">
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <p class="text-center bg-red-600 px-4 py-2 rounded">
+            {{ message }}
+          </p>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+  </div>
+  
+
   <!-- Upload Section -->
   <section class="py-16 px-6 max-w-3xl mx-auto">
     <h2 class="text-3xl font-semibold text-center mb-8">Upload or Paste Your Notes</h2>
+    <h3 class="text-2xl font-semibold text-center mb-8">Number of Notes Left - {{ user_limit }}</h3>
     <form action="/process" method="POST" enctype="multipart/form-data" class="bg-white p-8 rounded-xl shadow space-y-6">
       
       <!-- File Input -->
