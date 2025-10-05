@@ -77,6 +77,26 @@ def signup():
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
+    if request.method == 'POST':
+        email = request.form.get('Email')
+        password = request.form.get('Password')
+        print(email, password)
+
+        user = User.query.filter_by(email=email).first()
+
+        if not user:
+            flash("User not found. Please check your email or sign up.")
+            return redirect('/login')
+
+        if check_password_hash(user.password, password):
+            session['user_id'] = user.id
+            session['user_name'] = user.name
+            session['user_limit'] = user.limit
+            return redirect('/dashboard')
+        else:
+            flash("Invalid credentials. Please try again.")
+            return redirect('/login')    
+
     return render_template('signup.html')
 
 @app.route('/logout')

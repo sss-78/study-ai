@@ -43,9 +43,9 @@
 
 
       <!-- Login Form -->
-      <form id="loginForm" class="space-y-4 hidden">
-        <input type="email" placeholder="Email" class="w-full p-2 border rounded-lg" required />
-        <input type="password" placeholder="Password" class="w-full p-2 border rounded-lg" required />
+      <form id="loginForm" class="space-y-4 hidden" action="/login" method="POST">
+        <input type="email" name = "Email" placeholder="Email" class="w-full p-2 border rounded-lg" required />
+        <input type="password" name = "Password" placeholder="Password" class="w-full p-2 border rounded-lg" required />
         <button type="submit" class="w-full bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition">
           Login
         </button>
